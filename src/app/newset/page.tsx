@@ -1,11 +1,22 @@
-import RouteButton from './components/RouteButton';
+import Link from 'next/link'
+
+
+function RouteButton({text, dest} : {text : string, dest : string}){
+  return(
+    /* Link better for simple navigation */
+    <Link href={`/${dest}`}>
+      <button>{text}</button>
+    </Link>
+  );
+}
+
 
 export default function Home() {
   return (
     <div className="homeLayout">
-      <title>It's time to remember!</title>
+      <title>It's time to create!</title>
       
-      <h1 className="dailyMessage">It's time to remember!</h1>
+      <h1 className="dailyMessage">It's time to create!</h1>
 
       <section className="navButtons">
         <RouteButton

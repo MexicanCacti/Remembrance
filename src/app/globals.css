@@ -1,3 +1,82 @@
+@keyframes pulsateButton{
+  0% {
+    box-shadow: 
+      inset 0 0 20px 5px whitesmoke,
+      0 0 30px 10px red,
+      0 0 50px 15px blueviolet;
+  }
+  50% {
+    box-shadow: 
+      0 0 30px 10px whitesmoke,
+      inset 0 0 40px 15px red,
+      0 0 60px 20px blueviolet;
+  }
+  100% {
+    box-shadow: 
+      0 0 20px 5px whitesmoke,
+      0 0 30px 10px red,
+      inset 0 0 50px 15px blueviolet;
+  }
+}
+
+html{
+  background-color:black;
+}
+
+/* grid-template-areas: each row defined by ' ' ... each column in row inside ' ' sep w/ space */
+.homeLayout{
+  font-size: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: Arial, Helvetica, sans-serif;
+
+  display : grid;
+  grid-template-areas: 
+  "header"
+  "navButtons";
+  row-gap:2em;
+}
+
+/* grid-area: a/b/c/d  ....  row-start/column-start/row-end/column-end */
+.dailyMessage{
+  font-size: 3em;
+  color:red;
+  grid-area: 'header';
+  text-align: center;
+  width: 100%;
+  max-width: 300em;
+  border-bottom:solid;
+  padding-bottom:0.5em;
+}
+
+.navButtons{
+  grid-area: 'navButtons';
+  display:flex;
+  flex-direction:row;
+  justify-content: space-evenly;
+  width: 80%;
+  max-width: 200em;
+  max-height: 250em;
+  margin: 0 auto;
+}
+
+.navButtons button{
+  font-size: 1.5em;
+  padding: 1em 2em;
+  background-color:black;
+  color:white;
+  border:none;
+  border-color:whitesmoke;
+  border-style:groove;
+  height: 25em;
+  animation: pulsateButton 2s infinite alternate ease-in-out;
+}
+
+.navButtons button:hover{
+  transform:scale(1.2);
+}
+
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -7,36 +86,5 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
-  }
-}
-
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
   }
 }

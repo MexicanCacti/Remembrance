@@ -1,11 +1,11 @@
-import RouteButton from './components/RouteButton';
+import RouteButton from '../components/RouteButton';
 
 export default function Home() {
   return (
     <div className="homeLayout">
-      <title>It's time to remember!</title>
+      <title>It's time to review!</title>
       
-      <h1 className="dailyMessage">It's time to remember!</h1>
+      <h1 className="dailyMessage">It's time to review!</h1>
 
       <section className="navButtons">
         <RouteButton
