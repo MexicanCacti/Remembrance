@@ -1,6 +1,30 @@
-import RouteButton from './components/RouteButton';
+"use client";
+import {RouteButton} from './components/Buttons';
+import { useState, useEffect} from 'react';
+import {initTables} from "@/app/components/DatabaseQuery";
 
 export default function Home() {
+  const [createdTable, setCreatedTable] = useState(false);
+
+  /* FIX ME: Runs EVERY time page is loaded... should run only once! */
+  useEffect(() => {
+    const initDB = async() => {
+      console.log("Checking Table Status...")
+      const success = await initTables();
+      if(success === true){
+        console.log("Database init Success!");
+        setCreatedTable(true);
+      }
+      else{
+        console.log("Database init failed!");
+      }
+    };
+    
+    if(!createdTable){
+      initDB();
+    }
+  }, []);
+
   return (
     <div className="homeLayout">
       <title>It's time to remember!</title>
