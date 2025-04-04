@@ -34,6 +34,11 @@ export default function SelectSet(){
         }
     }
 
+    const handleSetReview = async(setID: number) => {
+        router.push(`/reviewset?setID=${setID}`);
+    }
+
+    /* Note Add button for redirecting to review set! */
     return (
         <div style={{ backgroundColor: "#f0f0f0", color: "#333", padding: "20px", borderRadius: "8px" }}>
             <h1 style={{ color: "#000" }}>Select Set</h1>
@@ -62,6 +67,11 @@ export default function SelectSet(){
                                     <SubmitButton 
                                         text="Delete" 
                                         onClick={() => handleSetDelete(set.id)} 
+                                    />
+
+                                    <SubmitButton 
+                                        text="Review" 
+                                        onClick={() => handleSetReview(set.id)} 
                                     />
                                 </td>
                             </tr>
