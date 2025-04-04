@@ -7,18 +7,16 @@ import {addSet} from "@/app/components/DatabaseQuery";
 export default function NewSet() {
     const [setName, setSetName] = useState("");
     const [setDesc, setSetDesc] = useState("");
-    const [error, setError] = useState("");
     const router = useRouter(); /* Conditional Routing */
 
     const handleSubmit = async () => {
-        const success = await addSet(setName, setDesc);
-        if(success){
-            router.push("/");
-        }
-        else{
-            setError("Set name already exists or error occurred!");
-        }
+      console.log("Submitting new set...");
+      const setID = await addSet(setName, setDesc);
+      const setIDNumber = (typeof setID === "number" && !isNaN(setID)) ? setID : -1;
+      console.log(`"${setIDNumber}"`);
+      router.push(`/editset?setID=${setIDNumber}`);
     };
+ 
 
   return (
     <div className="newSetLayout">
@@ -42,15 +40,10 @@ export default function NewSet() {
             />
         </label>
       </section>
-      
-      {error && <p className="errorMessage">{error}</p>}
     
       <section className="inputButtons">
-        <SubmitButton onClick={handleSubmit} text = "Submit" />
-        <RouteButton
-            text = "Return"
-            dest = ""
-        />
+        <SubmitButton text = "Submit" onClick={handleSubmit}/>
+        <RouteButton text = "Return" dest = "" />
       </section>
 
     </div>

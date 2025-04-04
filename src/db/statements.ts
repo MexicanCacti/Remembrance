@@ -21,7 +21,7 @@ export const createTables = () => {
             set_id INTEGER NOT NULL,
             front1 TEXT NOT NULL,
             front2 TEXT NULL,
-            back TEXT NOT NULL,
+            back1 TEXT NOT NULL,
             back2 TEXT NULL,
             FOREIGN KEY (set_id) REFERENCES sets(id) ON DELETE CASCADE
         );
@@ -48,20 +48,20 @@ export const createSet = (setName : string, setDesc : string = "") => {
 
     if(checkResult.count > 0){
         console.log(`Set with "${setName}" exists!`);
-        return false;
+        return -1;
     }
     try{
         const insertSql = `
         INSERT INTO sets (name, description)
         VALUES (?, ?)
         `
-        db.prepare(insertSql).run(setName, setDesc)
-        console.log(`Set "${setName}" added successfully!`);  
-        return true;    
+        const result = db.prepare(insertSql).run(setName, setDesc)
+        console.log(`Set "${setName}" added successfully! | Set ID: "${result.lastInsertRowid}"`);  
+        return result.lastInsertRowid;
     }
     catch (error){
         console.log("Table Creation Error:", error);
-        return false;
+        return -1;
     }
 }
 
@@ -71,8 +71,8 @@ export const deleteSet = (setID : number) => {
             DELETE FROM sets
             WHERE id = ?
         `;
-        db.prepare(deleteSql).run(setID);
-        return true;  
+        const result = db.prepare(deleteSql).run(setID);
+        return result.changes > 0;
     }
     catch(error){
         return false;
@@ -85,7 +85,6 @@ export const getSets = () => {
         SELECT * from sets
         `
         const rows = db.prepare(sql).all()
-        console.log(rows) 
         return rows;
     }
     catch(error){
@@ -100,38 +99,77 @@ export const getWords = (setID : number) =>{
             WHERE set_id = ?
         `;
 
-        const words = db.prepeare(getWordsSql).run(setID);
-        console.log(words);
+        const words = db.prepare(getWordsSql).all(setID);
         return words;
     }
     catch(error){
         return false;
     }
-
 }
 
 export const addWord = (setID : number, word: Word) => {
     try{
         const addWordSql = `
-            INSERT INTO words (set_id, front1, front2, back, back2)
+            INSERT INTO words (set_id, front1, front2, back1, back2)
             VALUES (?, ?, ?, ?, ?)
         `;
         db.prepare(addWordSql).run(setID, word.front1, word.front2 || null, word.back1, word.back2 || null);
         return true;
     }
     catch(error){
+        console.log("Word Add Error:", error);
         return false;
     }
+}
+
+export const updateWord = (setID: number, word: Word | null, wordID : number) => {
+    try{
+        console.log(`Attempting to Update: ${word?.id}`);
+        if(word === null) return false;
+        
+        const addWordSql = `
+            UPDATE words
+            SET front1 = ?, front2 = ?, back1 = ?, back2 = ?
+            WHERE set_id = ? AND id = ?
+        `;
+        const result = db.prepare(addWordSql).run( word.front1, word.front2 || null, word.back1, word.back2 || null, setID, wordID);
+        if(result.changes === 0){
+            console.log("No rows updated!");
+        }
+        else{
+            console.log("Updated Word!");
+        }
+
+        return true;
+    }
+    catch(error){
+        console.error("Error during update:", error);
+        return false;
+    }  
 }
 
 export const deleteWord = (setID : number, wordID : number) => {
     try{
         const deleteWordSql = `
             DELETE FROM words
-            WHERE setID = ? AND wordID = ?
+            WHERE set_id = ? AND id = ?
         `;
         db.prepare(deleteWordSql).run(setID, wordID);
         return true;
+    }
+    catch(error){
+        return false;
+    }
+}
+
+export const updateLastUsed = (setID : number) =>{
+    try{
+        const updateLastUsedSql = `
+            UPDATE sets
+            SET date_last_used = CURRENT_TIMESTAMP
+            WHERE id = ?
+        `
+        db.prepare(updateLastUsedSql).run(setID);
     }
     catch(error){
         return false;

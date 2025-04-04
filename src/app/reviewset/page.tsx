@@ -1,27 +1,18 @@
-import RouteButton from '../components/RouteButton';
+"use client";
+import { useSearchParams } from "next/navigation";
+import ReviewSet from "./ReviewSet";
+import ReviewSelect from "./ReviewSelect";
 
-export default function Home() {
-  return (
-    <div className="homeLayout">
-      <title>It's time to review!</title>
-      
-      <h1 className="dailyMessage">It's time to review!</h1>
+export default function directPage() {
+    const searchParams = useSearchParams();
+    const setID = searchParams.get("setID");
+    const setIDNumber = setID ? parseInt(setID, 10) : -1;
 
-      <section className="navButtons">
-        <RouteButton
-          text = "New Set"
-          dest = "newset"
-        />
-        <RouteButton
-        text = "Review Set"
-        dest = "reviewset"
-        />
-        <RouteButton
-        text = "Edit Set"
-        dest = "editset"
-        />
-      </section>
+    return(
+        <div style={{ backgroundColor: "#f0f0f0", color: "#333", padding: "20px", borderRadius: "8px" }}>
+            <h1 style={{ color: "#000" }}>Review Page</h1>
+            {setIDNumber < 0 ? <ReviewSelect /> : <ReviewSet setID={setIDNumber} />}
+        </div>
+    );
 
-    </div>
-  );
 }
